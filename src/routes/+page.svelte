@@ -1,10 +1,11 @@
 <script>
     import { onMount } from 'svelte';
 
+    let selectedProduct = 'workstation';
     let selectedVersion = '';
     let selectedOS = 'windows';
 
-    const vmwareVersions = [
+    const vmwareWorkstationVersions = [
         "17.6.3-24583834", "17.6.2-24409262", "17.6.1-24319023", "17.6.0-24238078", 
         "17.5.2-23775571", "17.5.1-23298084", "17.5.0-22583795", "17.0.2-21581411", 
         "17.0.1-21139696", "17.0.0-20800274", "16.2.4-20089737", "16.2.3-19376536", 
@@ -21,6 +22,13 @@
         "12.1.0-3272444", "12.0.1-3160714", "12.0.0-2985596", "10.0.2-1744117", 
         "9.0.4-1945795", "8.0.6-1035888", "7.1.6-744570"
     ];
+
+    const vmwareFusionVersions = [
+        "Coming Soon"
+    ];
+
+    $: versions = selectedProduct === 'workstation' ? vmwareWorkstationVersions : vmwareFusionVersions;
+    $: isMacOnly = selectedProduct === 'fusion';
 </script>
 
 <div class="text-[#ffffff] max-w-xl mx-auto">
@@ -36,14 +44,28 @@
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <select
-                        bind:value={selectedVersion}
+                        bind:value={selectedProduct}
                         class="w-full bg-[#333333] text-[#ffffff] border-[#444444] rounded-sm px-3 py-1.5 text-sm focus:border-[#71A5B9] focus:ring-[#71A5B9]">
-                        <option value="">Select Version</option>
-                        {#each vmwareVersions as version}
-                            <option value={version}>{version}{version === vmwareVersions[0] ? ' (latest)' : ''}</option>
-                        {/each}
+                        <option value="workstation">VMware Workstation</option>
+                        <option disabled value="fusion">VMware Fusion (Coming Soon)</option>
                     </select>
                 </div>
+                <div class="flex-1">
+                    <select
+                        bind:value={selectedVersion}
+                        class="w-full bg-[#333333] text-[#ffffff] border-[#444444] rounded-sm px-3 py-1.5 text-sm focus:border-[#71A5B9] focus:ring-[#71A5B9]">
+                        {#if selectedProduct === 'workstation'}
+                            <option value="">Select Version</option>
+                            {#each versions as version}
+                                <option value={version}>{version}{version === versions[0] ? ' (latest)' : ''}</option>
+                            {/each}
+                        {:else}
+                            <option value="" disabled>Coming Soon</option>
+                        {/if}
+                    </select>
+                </div>
+            </div>
+            {#if !isMacOnly}
                 <div class="flex-1">
                     <select
                         bind:value={selectedOS}
@@ -52,14 +74,18 @@
                         <option value="linux" disabled>Linux (Coming Soon)</option>
                     </select>
                 </div>
-            </div>
+            {/if}
             <div class="flex">
-                <a
-                    href="https://tomcat.spitkov.hu/vmware/windows/VMware-workstation-{selectedVersion}.exe"
-                    class="text-[#71A5B9] flex items-center whitespace-nowrap px-3 py-1 border border-transparent hover:border-[#71A5B9] rounded-sm transition-colors duration-200 {!selectedVersion ? 'opacity-50 cursor-not-allowed' : ''}"
-                    class:pointer-events-none={!selectedVersion}>
-                    <span>[download]</span>
-                </a>
+                {#if selectedProduct === 'workstation'}
+                    <a
+                        href="https://tomcat.spitkov.hu/vmwareworkstation/windows/VMware-workstation-{selectedVersion}.exe"
+                        class="text-[#71A5B9] flex items-center whitespace-nowrap px-3 py-1 border border-transparent hover:border-[#71A5B9] rounded-sm transition-colors duration-200 {!selectedVersion ? 'opacity-50 cursor-not-allowed' : ''}"
+                        class:pointer-events-none={!selectedVersion}>
+                        <span>[download]</span>
+                    </a>
+                {:else}
+                    <span class="text-[#aaaaaa]">Coming Soon</span>
+                {/if}
             </div>
         </div>
     </section>
