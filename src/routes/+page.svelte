@@ -78,7 +78,7 @@
             <div class="flex">
                 {#if selectedProduct === 'workstation'}
                     <a
-                        href="https://tomcat.spitkov.hu/vmwareworkstation/windows/VMware-workstation-{selectedVersion}.exe"
+                        href="https://tomcat.spitkov.hu/vmware/workstation/windows/VMware-workstation-{selectedVersion}.exe"
                         class="text-[#71A5B9] flex items-center whitespace-nowrap px-3 py-1 border border-transparent hover:border-[#71A5B9] rounded-sm transition-colors duration-200 {!selectedVersion ? 'opacity-50 cursor-not-allowed' : ''}"
                         class:pointer-events-none={!selectedVersion}>
                         <span>[download]</span>
